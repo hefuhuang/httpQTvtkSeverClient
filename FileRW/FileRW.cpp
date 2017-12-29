@@ -65,3 +65,42 @@ float FileRW::ReadFloat(const char* section, char* pszEntry, float data)
 { 
 	return data;
 }
+
+std::string &FileRW::TrimString(std::string &str)
+{
+	string::size_type pos = 0; 
+	while (str.npos !=(pos=str.find(" ")))
+	{
+		str = str.replace(pos,pos+1,"");
+		return str;
+	}
+}
+
+int  FileRW::ReadINI(string path)
+{
+	ifstream InConfFile(path.c_str());
+	if (!InConfFile)  return 0;
+	string StrLine = "";
+	string StrRoot = ""; 
+	vector<ININode> VecIni;
+	while (getline(InConfFile,StrLine))   
+	{ 
+		string::size_type LeftPos = 0;
+		string::size_type RightPos = 0;
+		string::size_type EqualDivPos = 0; 
+		string StrKey = "";
+		string StrValue = "";
+		if ((StrLine.npos != (LeftPos = StrLine.find("["))) && (StrLine.npos != (RightPos = StrLine.find("]"))))
+		{
+			StrRoot = StrLine.substr(LeftPos+1,RightPos-1); 
+	  }
+		if (StrLine.npos!=(EqualDivPos=StrLine.find("=")))
+		{
+			StrKey = StrLine.substr(0,EqualDivPos); 
+			StrValue = StrLine.substr(EqualDivPos+1,StrLine.size()-1);
+			StrKey = TrimString(StrKey); 
+			StrValue = TrimString(StrValue);
+		}
+
+
+}
