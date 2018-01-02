@@ -91,7 +91,6 @@ void DataBase::CreateTable(std::string fileDataBase)
 bool DataBase::ModelOperateDatabase(std::string fielPath)  // QSqlTableModel 进行 SELECT 操作：
 {
 	//  row 行 col 列 
-
 	if (Connect("demo.db")) {
 		QSqlTableModel model;
 		model.setTable("student");
@@ -123,8 +122,10 @@ void DataBase::VisualDataBase(std::string fielPath)
 		QTableView *view = new QTableView;
 		view->setModel(model);
 		view->setSelectionMode(QAbstractItemView::SingleSelection);
-		view->setSelectionBehavior(QAbstractItemView::SelectRows);
-		view->setColumnHidden(Column_ID, true);
+		view->setSelectionBehavior(QAbstractItemView::SelectRows); 
+
+		view->setColumnHidden(Column_ID, true);    // hide function
+
 		view->resizeColumnsToContents();
 		view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -132,6 +133,4 @@ void DataBase::VisualDataBase(std::string fielPath)
 		header->setStretchLastSection(true);
 		view->show();
 	}
-
-
 }
