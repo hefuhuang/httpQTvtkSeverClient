@@ -35,7 +35,8 @@ string FileRW::GetValue(std::string root, std::string key)
 	return "";
 }
 int FileRW::WriteINI(string path)
-{
+{ 
+
 	ofstream OutConfFile(path.c_str());
 	if (!OutConfFile)
 		return -1;
@@ -48,14 +49,13 @@ int FileRW::WriteINI(string path)
 		}
 		
 	}
-
 	OutConfFile.close();
 	OutConfFile.clear();
 	return 1;
 }
 
 
-void FileRW::writeString(const char* section, char* pszEntry, std::string Str)
+void FileRW::writeString(string section, string pszEntry, std::string Str)
 {   
 	using namespace std;
 	std::ofstream Ofile;
@@ -81,34 +81,34 @@ vector <ININode>::size_type FileRW::SetValue(string root, string key, string val
 }
  
 
-void FileRW::writeInt(char* section, char* pszEntry, int* data)
+void FileRW::writeInt(string section, string pszEntry, int data)
 {
 
 }
-void FileRW::WriteBool(char* section, char*pszEntry, bool flag=0)
+void FileRW::WriteBool(string section, string pszEntry, bool flag = 0)
 {
 
 }
-void FileRW::WriteFloat(char* section, char* pszEntry,float value)
+void FileRW::WriteFloat(string section, string pszEntry, float value)
 {
 
 }
 
-std::string FileRW::ReadSrting(const char* section, char* pszEntry, std::string Str)
+std::string FileRW::ReadSrting(string section, string pszEntry, std::string Str)
 {   
 
 	return Str;
 }
-int FileRW::ReadInt(const char* section, char* pszEntry, int data)
+int FileRW::ReadInt(string section, string pszEntry, int data)
 {
 
 	return data;
 }
-bool FileRW::ReadBool(const char* section, char* pszEntry, bool flags =0)
+bool FileRW::ReadBool(string section, string pszEntry, bool flags = 0)
 {
 	return flags;
 }
-float FileRW::ReadFloat(const char* section, char* pszEntry, float data)
+float FileRW::ReadFloat(string section, string pszEntry, float data)
 { 
 	return data;
 }

@@ -31,16 +31,16 @@ public:
 	int WriteINI(string path);
 
 
-	void writeString(const char* section, char* pszEntry, std::string Str);   // Writing String code  
-	void writeInt(char* section, char* pszEntry, int* data);    // Writing Int code 
-	void WriteBool(char* section, char* pszEntry, bool flag);
-	void WriteFloat(char* section,char* pszEntry,float value);
+	void writeString(string section, string pszEntry, std::string Str);   // Writing String code  
+	void writeInt(string section, string pszEntry, int data);    // Writing Int code 
+	void WriteBool(string section, string pszEntry, bool flag);
+	void WriteFloat(string section, string pszEntry, float value);
 	
 
-	std::string ReadSrting(const char* section, char* pszEntry, std::string Str);
-	int ReadInt(const char* section, char* pszEntry, int data);
-	bool ReadBool(const char* section, char* pszEntry, bool flags);
-	float ReadFloat(const char* section, char* pszEntry, float data);
+	std::string ReadSrting(string section, string pszEntry, std::string Str);
+	int ReadInt(string section, string pszEntry, int data);
+	bool ReadBool(string section, string pszEntry, bool flags);
+	float ReadFloat(string section, string pszEntry, float data);
 
 
 	void *ReCopy(char* src,char* dest);
