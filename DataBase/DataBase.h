@@ -26,13 +26,14 @@ public:
     DataBase();
 	~DataBase();
 	void CreateTable(std::string fileDataBase);
+	void CreateDBTable(std::string fileDataBase,std::string DBCommand);
+
 	bool ModelOperateDatabase(std::string fielPath);
 	bool Connect(const QString &dbName);
 	void VisualDataBase(std::string fielPath);
-	 
+	void PrintInfo(QSqlQuery m_Query,std::string DBCommand);
 
 private: 
-
 	std::string filepath;
 	enum ColumnIndex
 	{
@@ -40,7 +41,6 @@ private:
 		Column_Name = 1,
 		Column_Age = 2
 	};
-
 };
 
 #endif 

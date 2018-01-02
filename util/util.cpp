@@ -3,3 +3,8 @@
 util::util()
 {
 }
+
+util::~util()
+{
+
+}

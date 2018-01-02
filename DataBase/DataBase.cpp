@@ -132,5 +132,71 @@ void DataBase::VisualDataBase(std::string fielPath)
 		QHeaderView *header = view->horizontalHeader();
 		header->setStretchLastSection(true);
 		view->show();
+
 	}
+}
+
+void DataBase::CreateDBTable(std::string fileDataBase,std::string DBCommand)
+{
+	QFile::remove(fileDataBase.c_str());   // mkaing sure sys.db do not exist 
+
+	if (Connect(fileDataBase.c_str()))  //  connect Table 
+	{
+		QSqlQuery m_Query;
+		bool  SuccessFlg = m_Query.exec(DBCommand.c_str());
+		/*
+		CREATE TABLE Persons
+		(
+		Id_P int NOT NULL,
+		LastName varchar(255) NOT NULL,
+		FirstName varchar(255),
+		Address varchar(255),
+		City varchar(255),
+		PRIMARY KEY (Id_P)
+		)
+		*/
+		// PRIMARY KEY 约束唯一标识数据库表中的每条记录。
+
+		if (SuccessFlg)
+		{
+			qDebug() << " Create REGEN TABLE successful ";
+
+			m_Query.prepare("INSERT INTO student (name, age) VALUES (?, ?)");   // Insert student Table 
+			QVariantList m_Names;    // continus operate database 
+			m_Names << "huang" << "LI" << "Tom" << "Jack";
+			m_Query.addBindValue(m_Names);
+			QVariantList m_Ages;
+			m_Ages << "18" << "50" << "80" << "25";
+			m_Query.addBindValue(m_Ages);
+			if (!m_Query.execBatch())
+			{
+				QMessageBox::critical(0, QObject::tr("Database Error"),
+					m_Query.lastError().text());
+
+			}
+			m_Query.finish();
+			std::string DBcommand = "SELECT name, age FROM student";
+		//	m_Query.exec("SELECT name, age FROM student");
+			PrintInfo(m_Query, DBcommand.c_str());
+		}
+		else
+		{
+			qDebug() << " Create Table failed ! ";
+			QMessageBox::critical(0, QObject::tr("Database Error"),
+				m_Query.lastError().text());
+		}
+		m_Query.clear();
+	}
+
+}  
+
+void DataBase::PrintInfo(QSqlQuery m_Query ,std::string DBCommand)
+{   
+	m_Query.exec(DBCommand.c_str());
+	while (m_Query.next()) {
+		QString name = m_Query.value(0).toString();
+		int age = m_Query.value(1).toInt();
+		qDebug() << name << ": " << age;
+	}
+
 }
