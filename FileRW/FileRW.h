@@ -12,7 +12,7 @@
 #include<map>
 #include<windows.h>
 
- // 访问者模式 
+ 
 class Element;  
 class ININode;
 class SubNode;
@@ -27,31 +27,35 @@ public:
 	string &TrimString(string &str);
 	int ReadINI(std::string path);
 	std::string GetValue(std::string root, std::string key);
-	vector<ININode>::size_type GetSize(){
-		return map_ini.size();
-	}
 	vector<ININode>::size_type SetValue(string root, string key, string value);
 	int WriteINI(string path);
 
-	void Clear(){
-		map_ini.clear();
-	}
 
 	void writeString(const char* section, char* pszEntry, std::string Str);   // Writing String code  
 	void writeInt(char* section, char* pszEntry, int* data);    // Writing Int code 
 	void WriteBool(char* section, char* pszEntry, bool flag);
 	void WriteFloat(char* section,char* pszEntry,float value);
 	
+
 	std::string ReadSrting(const char* section, char* pszEntry, std::string Str);
 	int ReadInt(const char* section, char* pszEntry, int data);
 	bool ReadBool(const char* section, char* pszEntry, bool flags);
 	float ReadFloat(const char* section, char* pszEntry, float data);
 
+
 	void *ReCopy(char* src,char* dest);
+	void Clear(){
+		m_MapIni.clear();
+	}
+	vector<ININode>::size_type GetSize()
+	{
+		return m_MapIni.size();
+	}
 
 private:
 	char  fileName[_MAX_PATH];
-    map<std::string, SubNode> map_ini;
+    map<std::string, SubNode> m_MapIni;
+
 };
 
 class ININode
@@ -67,14 +71,15 @@ public:
 		string key;
 		string value;
 };
+
 class SubNode
 {
 public:
 	void InsertElement(std::string key, std::string value)
 	{	
-	sub_node.insert(pair<string, string>(key, value));
+	m_SubNode.insert(pair<string, string>(key, value));
 	}
-	map<string, string> sub_node;
+	map<string, string> m_SubNode;
 };
 
 #endif
