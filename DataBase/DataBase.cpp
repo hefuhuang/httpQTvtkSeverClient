@@ -156,7 +156,6 @@ void DataBase::CreateDBTable(std::string fileDataBase,std::string DBCommand)
 		)
 		*/
 		// PRIMARY KEY 约束唯一标识数据库表中的每条记录。
-
 		if (SuccessFlg)
 		{
 			qDebug() << " Create REGEN TABLE successful ";
@@ -172,7 +171,6 @@ void DataBase::CreateDBTable(std::string fileDataBase,std::string DBCommand)
 			{
 				QMessageBox::critical(0, QObject::tr("Database Error"),
 					m_Query.lastError().text());
-
 			}
 			m_Query.finish();
 			std::string DBcommand = "SELECT name, age FROM student";
