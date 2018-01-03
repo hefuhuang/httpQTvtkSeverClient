@@ -27,6 +27,16 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{861b41e3-30fd-440d-98e8-4f67dd887c70}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{0df3e1f6-fe5b-47ef-a4f1-55be27c3cc47}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -47,12 +57,27 @@
     <ClCompile Include="GlobalVAton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="weatherdetil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_WorkerThread.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_WorkerThread.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_Rebuild.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlobalVAton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="weatherdetil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -64,5 +89,8 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Rebuild.qrc" />
+    <CustomBuild Include="WorkerThread.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

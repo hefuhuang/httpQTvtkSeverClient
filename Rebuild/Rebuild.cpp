@@ -9,29 +9,81 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+#include <QVBoxLayout>
+#include <QThread>
+#include <QLCDNumber>
+#include <QPushButton>
+
 #include "Rebuild.h"
 #include "GlobalVAton.h" 
 #include "FileRW.h"
 #include "Qt3DRebuild.h"
 #include "DataBase.h" 
+#include "NetUtil.h" 
+#include "WorkerThread.h"
+
+class Rebuild::Private
+{
+public:
+	Private()
+	{
+	
+	}
+	void fetchWeather(const QString &cityName) const
+	{
+		m_NetUtil->Get(QString("http://www.weather.com.cn/data/cityinfo/101190408.html").arg(cityName));
+	}
+ 
+	NetUtil *m_NetUtil;
+};
+
+Rebuild::~Rebuild()
+{
+	delete m_Private;
+	m_Private = nullptr;
+
+}
 
 Rebuild::Rebuild(QWidget *parent)
-	: QMainWindow(parent)
+: QMainWindow(parent), m_Private(new Rebuild::Private)
 {
-	GlobalVaton *singletonObj = GlobalVaton::Instance();   
+//	GlobalVaton *singletonObj = GlobalVaton::Instance();   
 
 	string filePath = "../System.ini";
 	string DataFilePath = "../SysConf.db ";
-
 	fileOperation(filePath);
-
 //	databaseOperation(DataFilePath);
 //	VisualDataBase(); 
 	m_DataBase = new DataBase;
 	m_DataBase->CreateTable(DataFilePath);
 	m_DataBase->VisualDataBase(DataFilePath);
 
-	ui.setupUi(this);
+
+	QWidget *widget = new QWidget(this);
+	QVBoxLayout *layout = new QVBoxLayout;
+	widget->setLayout(layout);
+	QLCDNumber* lcdNumber = new QLCDNumber(this);
+	layout->addWidget(lcdNumber);
+	QPushButton *button = new QPushButton(tr("Start"), this);
+	layout->addWidget(button);
+	setCentralWidget(widget);
+
+	QTimer *timer = new QTimer(this);
+	connect(timer, &QTimer::timeout, [=]() {
+		static int sec = 0;
+		lcdNumber->display(QString::number(sec++));
+	});
+
+	WorkerThread *thread = new WorkerThread(this);
+	connect(thread, &WorkerThread::Done, timer, &QTimer::stop);
+	connect(thread, &WorkerThread::finished, thread, &WorkerThread::deleteLater);
+
+	connect(button, &QPushButton::clicked, [=]() {
+		timer->start(1);
+		thread->start();
+	});
+
+//	ui.setupUi(this);
 }
 
 void Rebuild::fileOperation(string filePath)
@@ -45,6 +97,8 @@ void Rebuild::fileOperation(string filePath)
 	file.SetValue("class1", "n", "2");
 	file.WriteINI("../System.ini");
 }
+
+
 
 void Rebuild::databaseOperation(string fileDataBase)
 {  
@@ -114,6 +168,7 @@ void Rebuild::databaseOperation(string fileDataBase)
 	
 }
 
+
 bool Rebuild::Connect(const QString &dbName)
 {
 	QSqlDatabase m_Db = QSqlDatabase::addDatabase("QSQLITE");
@@ -129,6 +184,7 @@ bool Rebuild::Connect(const QString &dbName)
 	return true;
 }
  
+
 void Rebuild::VisualDataBase()
 {
 	if (Connect("../SysConf.db")) {

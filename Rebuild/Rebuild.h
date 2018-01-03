@@ -32,7 +32,8 @@
 
 class GlobalVaton;
 class FileRW;
-class DataBase;  
+class DataBase; 
+class NetUtil;
 
 using namespace std;
 
@@ -40,14 +41,19 @@ class Rebuild : public QMainWindow
 {
     Q_OBJECT
 public:
-    Rebuild(QWidget *parent = Q_NULLPTR);
+    Rebuild(QWidget *parent = Q_NULLPTR);  
+	~Rebuild();
 
 	void fileOperation(string filePath);
 	bool Connect(const QString &dbName);
 	void databaseOperation(string  fileDataBase);
 	void VisualDataBase();
 	void ModelOperateDatabase(string fielPath);
+
 private:
+	class Private; 
+	friend class Private;
+	Private *m_Private; 
 
     Ui::RebuildClass ui;
 	DataBase* m_DataBase;
