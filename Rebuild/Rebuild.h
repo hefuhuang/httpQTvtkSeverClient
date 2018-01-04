@@ -54,9 +54,11 @@ private:
 	class Private; 
 	friend class Private;
 	Private *m_Private; 
+	QSharedMemory *m_sharedMemory;
+	DataBase* m_DataBase; 
 
     Ui::RebuildClass ui;
-	DataBase* m_DataBase;
+
 
 };
 

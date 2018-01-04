@@ -13,6 +13,9 @@
 #include <QThread>
 #include <QLCDNumber>
 #include <QPushButton>
+#include <QSharedMemory>
+#include <QLabel>
+#include <QFileDialog>
 
 #include "Rebuild.h"
 #include "GlobalVAton.h" 
@@ -45,7 +48,7 @@ Rebuild::~Rebuild()
 }
 
 Rebuild::Rebuild(QWidget *parent)
-: QMainWindow(parent), m_Private(new Rebuild::Private)
+: QMainWindow(parent), m_Private(new Rebuild::Private),m_sharedMemory(new QSharedMemory("shared", this))
 {
 //	GlobalVaton *singletonObj = GlobalVaton::Instance();   
 
@@ -83,6 +86,59 @@ Rebuild::Rebuild(QWidget *parent)
 		thread->start();
 	});
 
+	QWidget *mainWidget = new QWidget(this);
+	QVBoxLayout *mainLayout = new QVBoxLayout(mainWidget);
+	setCentralWidget(mainWidget);
+
+	QPushButton *saveButton = new QPushButton(tr("Save"), this);
+	mainLayout->addWidget(saveButton);
+	QLabel *picLabel = new QLabel(this);
+	mainLayout->addWidget(picLabel);
+	QPushButton *loadButton = new QPushButton(tr("Load"), this);
+	mainLayout->addWidget(loadButton);
+	connect(saveButton, &QPushButton::clicked, [=]() {
+		if (m_sharedMemory->isAttached()) {
+			m_sharedMemory->detach();
+		}
+		QString filename = QFileDialog::getOpenFileName(this);
+		QPixmap pixmap(filename);
+		picLabel->setPixmap(pixmap);
+
+		QBuffer buffer;
+		QDataStream out(&buffer);
+		buffer.open(QBuffer::ReadWrite);
+		out << pixmap;
+
+		int size = buffer.size();
+		if (!m_sharedMemory->create(size)) {
+			qDebug() << tr("Create Error: ") << m_sharedMemory->errorString();
+		}
+		else {
+			m_sharedMemory->lock();
+			char *to = static_cast<char *>(m_sharedMemory->data());
+			const char *from = buffer.data().constData();
+			memcpy(to, from, qMin(size, m_sharedMemory->size()));
+			m_sharedMemory->unlock();
+		}
+	});
+
+	connect(loadButton, &QPushButton::clicked, [=]() {
+		if (!m_sharedMemory->attach()) {
+			qDebug() << tr("Attach Error: ") << m_sharedMemory->errorString();
+		}
+		else {
+			QBuffer buffer;
+			QDataStream in(&buffer);
+			QPixmap pixmap;
+			m_sharedMemory->lock();
+			buffer.setData(static_cast<const char *>(m_sharedMemory->constData()), m_sharedMemory->size());
+			buffer.open(QBuffer::ReadWrite);
+			in >> pixmap;
+			m_sharedMemory->unlock();
+			m_sharedMemory->detach();
+			picLabel->setPixmap(pixmap);
+		}
+	});
 //	ui.setupUi(this);
 }
 
